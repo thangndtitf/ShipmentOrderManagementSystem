@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +30,17 @@ public class SHIPMENTORDERTPYESTEPCONTROLLER {
 	@GetMapping("searchAllStep")
 	public List<SHIPMENTORDERTPYESTEP> searchAllShoTypeStep(){
 		return shipmentOrderTypeStepRepo.getAllStep();
+	}
+	
+	@PostMapping("insertNewStep")
+	public SHIPMENTORDERTPYESTEP insertNewStep (@RequestBody SHIPMENTORDERTPYESTEP newStep) {
+		return shipmentOrderTypeStepRepo.insertNewStep(newStep);
+	}
+	
+	
+	@PostMapping("updateStep")
+	public SHIPMENTORDERTPYESTEP updateStep(SHIPMENTORDERTPYESTEP updateStep) {
+		return shipmentOrderTypeStepRepo.updateStep(updateStep);
 	}
 	
 }

@@ -22,6 +22,8 @@ public class SHIPMENTORDERTYPESTEPSERVICE {
 	}
 	
 	
+
+	
 	public List<SHIPMENTORDERTPYESTEP> getAllStep(){
 		List<SHIPMENTORDERTPYESTEP> listStep = new ArrayList<SHIPMENTORDERTPYESTEP>() ;
 		if(shipmentOrderTypeStepRepo.findAll().isEmpty()) {
@@ -44,6 +46,7 @@ public class SHIPMENTORDERTYPESTEPSERVICE {
 		
 		Optional<SHIPMENTORDERTPYESTEP> newStep = shipmentOrderTypeStepRepo.findById(stepID);
 		if(newStep.get().isDeleted() == true) {
+			newStep = null;
 			throw new IllegalStateException("SHO Step with ID "+ stepID + " was deleted");
 		}
 		return newStep;
@@ -71,6 +74,16 @@ public class SHIPMENTORDERTYPESTEPSERVICE {
 	}
 	
 	
+	public SHIPMENTORDERTPYESTEP updateStep(SHIPMENTORDERTPYESTEP updateStep) {
+		Optional<SHIPMENTORDERTPYESTEP> updatedStepOptional;
+		if(this.getStepByID(updateStep.getStepID()) != null) {
+			updatedStepOptional = Optional.of(updateStep);
+		}else {
+			updatedStepOptional =null;
+		}
+		return updatedStepOptional.get();
+	}
+
 	
 	
 	
