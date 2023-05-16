@@ -7,11 +7,9 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.thang.ShipmentOrderManagementSystem.controller.SHIPMENTORDERTYPECONTROLLER;
 import com.thang.ShipmentOrderManagementSystem.entity.SHIPMENTORDERTYPE;
 import com.thang.ShipmentOrderManagementSystem.repository.SHIPMENTORDERTYPEREPO;
 
@@ -82,7 +80,6 @@ public class SHIPMENTORDERTYPESERVICE {
 		} else {
 			return shipmentOrderTypeRepo.save(newShoType);
 		}
-
 	}
 
 	public SHIPMENTORDERTYPE updateShoType(SHIPMENTORDERTYPE updateShoType, int shoTypeID) {
@@ -117,7 +114,6 @@ public class SHIPMENTORDERTYPESERVICE {
 
 		}
 		return result;
-
 	}
 	
 	@Scheduled(fixedRate = 5000)
@@ -131,10 +127,8 @@ public class SHIPMENTORDERTYPESERVICE {
 		newShoType.setCreatedDate(LocalDateTime.now());
 		System.out.println(newShoType.getCreatedDate());
 		newShoType.setCreatedUser("Thang");
-		;
 		newShoType.setUpdatedDate(null);
-		newShoType.setUpdatedUser(null);
-		
+		newShoType.setUpdatedUser(null);		
 		if (newShoType.getShipmentOrederTypeId() < 0) {
 			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
 		}
@@ -143,8 +137,7 @@ public class SHIPMENTORDERTYPESERVICE {
 		}
 		if (newShoType.isDeleted()) {
 			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
-		} else {
-			
+		} else {			
 			shipmentOrderTypeRepo.save(newShoType);
 			LOGGER.info("Insert new Shipment Order type"+ newShoType.toString());
 		}
@@ -161,7 +154,6 @@ public class SHIPMENTORDERTYPESERVICE {
 		newShoType.setCreatedDate(LocalDateTime.now());
 		System.out.println(newShoType.getCreatedDate());
 		newShoType.setCreatedUser("Thang");
-		;
 		newShoType.setUpdatedDate(null);
 		newShoType.setUpdatedUser(null);
 		
@@ -179,7 +171,5 @@ public class SHIPMENTORDERTYPESERVICE {
 			LOGGER.info(" 2 Insert new Shipment Order type "+ newShoType.toString());
 		}
 	}
-	
-	
 
 }
