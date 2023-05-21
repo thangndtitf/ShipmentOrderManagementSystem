@@ -34,6 +34,8 @@ public class SYSUSERSERVICE {
 			throw new IllegalStateException("The User is Empty");
 		}
 		
+		
+		
 		return resultList;
 	}
 	
