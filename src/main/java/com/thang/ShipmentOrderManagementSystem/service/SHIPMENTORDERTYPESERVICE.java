@@ -15,7 +15,7 @@ import com.thang.ShipmentOrderManagementSystem.repository.SHIPMENTORDERTYPEREPO;
 
 @Service
 public class SHIPMENTORDERTYPESERVICE {
-	private static final Logger LOGGER= Logger.getLogger(SHIPMENTORDERTYPESERVICE.class);
+	private static final Logger LOGGER = Logger.getLogger(SHIPMENTORDERTYPESERVICE.class);
 	private final SHIPMENTORDERTYPEREPO shipmentOrderTypeRepo;
 
 	@Autowired
@@ -115,7 +115,7 @@ public class SHIPMENTORDERTYPESERVICE {
 		}
 		return result;
 	}
-	
+
 	@Scheduled(fixedRate = 5000)
 	public void insertNewShoTypeSch() {
 		SHIPMENTORDERTYPE newShoType = new SHIPMENTORDERTYPE();
@@ -128,7 +128,7 @@ public class SHIPMENTORDERTYPESERVICE {
 		System.out.println(newShoType.getCreatedDate());
 		newShoType.setCreatedUser("Thang");
 		newShoType.setUpdatedDate(null);
-		newShoType.setUpdatedUser(null);		
+		newShoType.setUpdatedUser(null);
 		if (newShoType.getShipmentOrederTypeId() < 0) {
 			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
 		}
@@ -137,12 +137,12 @@ public class SHIPMENTORDERTYPESERVICE {
 		}
 		if (newShoType.isDeleted()) {
 			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
-		} else {			
+		} else {
 			shipmentOrderTypeRepo.save(newShoType);
-			LOGGER.info("Insert new Shipment Order type"+ newShoType.toString());
+			LOGGER.info("Insert new Shipment Order type" + newShoType.toString());
 		}
 	}
-	
+
 	@Scheduled(fixedRate = 5000)
 	public void insertNewShoTypeSchclone() {
 		SHIPMENTORDERTYPE newShoType = new SHIPMENTORDERTYPE();
@@ -156,7 +156,7 @@ public class SHIPMENTORDERTYPESERVICE {
 		newShoType.setCreatedUser("Thang");
 		newShoType.setUpdatedDate(null);
 		newShoType.setUpdatedUser(null);
-		
+
 		if (newShoType.getShipmentOrederTypeId() < 0) {
 			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
 		}
@@ -166,10 +166,25 @@ public class SHIPMENTORDERTYPESERVICE {
 		if (newShoType.isDeleted()) {
 			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
 		} else {
-			
+
 			shipmentOrderTypeRepo.save(newShoType);
-			LOGGER.info(" 2 Insert new Shipment Order type "+ newShoType.toString());
+			LOGGER.info(" 2 Insert new Shipment Order type " + newShoType.toString());
 		}
 	}
 
+	public String solution(String S) {
+		// Implement your solution here
+		String result = "" ;
+		char[] charact = S.toCharArray();
+		for(int i = 0; i<= charact.length ; i++) {
+			if(Character.isUpperCase(charact[i])) {
+				if(Character.isLowerCase(charact[i+1])) {
+					if(Character.isLowerCase(charact[i-1])) {
+						result =  Character.toString(charact[i]);
+					}
+				}
+			}
+		}
+		return result;
+	}
 }
