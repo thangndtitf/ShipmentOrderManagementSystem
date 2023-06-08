@@ -172,19 +172,5 @@ public class SHIPMENTORDERTYPESERVICE {
 		}
 	}
 
-	public String solution(String S) {
-		// Implement your solution here
-		String result = "" ;
-		char[] charact = S.toCharArray();
-		for(int i = 0; i<= charact.length ; i++) {
-			if(Character.isUpperCase(charact[i])) {
-				if(Character.isLowerCase(charact[i+1])) {
-					if(Character.isLowerCase(charact[i-1])) {
-						result =  Character.toString(charact[i]);
-					}
-				}
-			}
-		}
-		return result;
-	}
+
 }
