@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.thang.ShipmentOrderManagementSystem.entity.ResponeObj;
 import com.thang.ShipmentOrderManagementSystem.entity.SHIPMENTORDERTYPE;
 import com.thang.ShipmentOrderManagementSystem.repository.SHIPMENTORDERTYPEREPO;
 
@@ -17,14 +18,18 @@ import com.thang.ShipmentOrderManagementSystem.repository.SHIPMENTORDERTYPEREPO;
 public class SHIPMENTORDERTYPESERVICE {
 	private static final Logger LOGGER = Logger.getLogger(SHIPMENTORDERTYPESERVICE.class);
 	private final SHIPMENTORDERTYPEREPO shipmentOrderTypeRepo;
+	private final ResponeObj _respObj;
 
 	@Autowired
-	public SHIPMENTORDERTYPESERVICE(SHIPMENTORDERTYPEREPO shipmentOrderTypeRepo) {
+	public SHIPMENTORDERTYPESERVICE(SHIPMENTORDERTYPEREPO shipmentOrderTypeRepo, ResponeObj _respObj) {
 		super();
 		this.shipmentOrderTypeRepo = shipmentOrderTypeRepo;
+		this._respObj = _respObj;
 	}
 
-	public List<SHIPMENTORDERTYPE> getAllShipmentOrder() {
+	
+	// function to search all shipmentordertype
+	public List<SHIPMENTORDERTYPE> getAllShipmentOrderType() {
 
 		if (shipmentOrderTypeRepo.findAll().isEmpty()) {
 			throw new IllegalStateException("Cannot find any ShipmentOrderType");
@@ -40,6 +45,33 @@ public class SHIPMENTORDERTYPESERVICE {
 
 		return listResult;
 	}
+	
+	
+	public String getAllShoType() {
+		String resultObjString = "";
+		List<SHIPMENTORDERTYPE> shoTypeList = shipmentOrderTypeRepo.findAll();
+		if(shoTypeList.isEmpty()) {
+			_respObj.setError(true);
+			_respObj.setMessage("Error at get All Sho Type ");
+			_respObj.setMessageDetail("loi ne thay kong");
+			_respObj.setResultObejct("");
+			resultObjString = _respObj.setResponeObj(_respObj);
+		}else {
+			for (SHIPMENTORDERTYPE shipmentordertype : shipmentOrderTypeRepo.findAll()) {
+				if(shipmentordertype.isDeleted() == false) {
+					shoTypeList.remove(shipmentordertype);
+				}
+			}
+			_respObj.setError(false);
+			_respObj.setMessage("OK");
+			_respObj.setMessageDetail("");
+			_respObj.setResultObejct(shoTypeList);
+			resultObjString = _respObj.setResponeObj(_respObj);	
+		}
+		return resultObjString;
+	}
+	
+	
 
 	public Optional<SHIPMENTORDERTYPE> getShipmentOrderByID(int shoId) {
 		Optional<SHIPMENTORDERTYPE> shoType = shipmentOrderTypeRepo.findById(shoId);
@@ -116,61 +148,61 @@ public class SHIPMENTORDERTYPESERVICE {
 		return result;
 	}
 
-	@Scheduled(fixedRate = 5000)
-	public void insertNewShoTypeSch() {
-		SHIPMENTORDERTYPE newShoType = new SHIPMENTORDERTYPE();
-		newShoType.setShipmentOrderTypeName("Oke");
-		newShoType.setDescription("ShipmentOrderType Create By Cron Job");
-		newShoType.setDeleted(false);
-		newShoType.setDeletedDate(null);
-		newShoType.setDeletedUser(null);
-		newShoType.setCreatedDate(LocalDateTime.now());
-		System.out.println(newShoType.getCreatedDate());
-		newShoType.setCreatedUser("Thang");
-		newShoType.setUpdatedDate(null);
-		newShoType.setUpdatedUser(null);
-		if (newShoType.getShipmentOrederTypeId() < 0) {
-			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
-		}
-		if (shipmentOrderTypeRepo.findById(newShoType.getShipmentOrederTypeId()).isPresent()) {
-			LOGGER.warn("The shipmentOrderType with ID: " + newShoType.getShipmentOrederTypeId() + " is exist");
-		}
-		if (newShoType.isDeleted()) {
-			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
-		} else {
-			shipmentOrderTypeRepo.save(newShoType);
-			LOGGER.info("Insert new Shipment Order type" + newShoType.toString());
-		}
-	}
+//	@Scheduled(fixedRate = 5000)
+//	public void insertNewShoTypeSch() {
+//		SHIPMENTORDERTYPE newShoType = new SHIPMENTORDERTYPE();
+//		newShoType.setShipmentOrderTypeName("Oke");
+//		newShoType.setDescription("ShipmentOrderType Create By Cron Job");
+//		newShoType.setDeleted(false);
+//		newShoType.setDeletedDate(null);
+//		newShoType.setDeletedUser(null);
+//		newShoType.setCreatedDate(LocalDateTime.now());
+//		System.out.println(newShoType.getCreatedDate());
+//		newShoType.setCreatedUser("Thang");
+//		newShoType.setUpdatedDate(null);
+//		newShoType.setUpdatedUser(null);
+//		if (newShoType.getShipmentOrederTypeId() < 0) {
+//			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
+//		}
+//		if (shipmentOrderTypeRepo.findById(newShoType.getShipmentOrederTypeId()).isPresent()) {
+//			LOGGER.warn("The shipmentOrderType with ID: " + newShoType.getShipmentOrederTypeId() + " is exist");
+//		}
+//		if (newShoType.isDeleted()) {
+//			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
+//		} else {
+//			shipmentOrderTypeRepo.save(newShoType);
+//			LOGGER.info("Insert new Shipment Order type" + newShoType.toString());
+//		}
+//	}
 
-	@Scheduled(fixedRate = 5000)
-	public void insertNewShoTypeSchclone() {
-		SHIPMENTORDERTYPE newShoType = new SHIPMENTORDERTYPE();
-		newShoType.setShipmentOrderTypeName("Oke");
-		newShoType.setDescription("ShipmentOrderType Create By Cron Job 2 nha");
-		newShoType.setDeleted(false);
-		newShoType.setDeletedDate(null);
-		newShoType.setDeletedUser(null);
-		newShoType.setCreatedDate(LocalDateTime.now());
-		System.out.println(newShoType.getCreatedDate());
-		newShoType.setCreatedUser("Thang");
-		newShoType.setUpdatedDate(null);
-		newShoType.setUpdatedUser(null);
-
-		if (newShoType.getShipmentOrederTypeId() < 0) {
-			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
-		}
-		if (shipmentOrderTypeRepo.findById(newShoType.getShipmentOrederTypeId()).isPresent()) {
-			LOGGER.warn("The shipmentOrderType with ID: " + newShoType.getShipmentOrederTypeId() + " is exist");
-		}
-		if (newShoType.isDeleted()) {
-			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
-		} else {
-
-			shipmentOrderTypeRepo.save(newShoType);
-			LOGGER.info(" 2 Insert new Shipment Order type " + newShoType.toString());
-		}
-	}
+//	@Scheduled(fixedRate = 5000)
+//	public void insertNewShoTypeSchclone() {
+//		SHIPMENTORDERTYPE newShoType = new SHIPMENTORDERTYPE();
+//		newShoType.setShipmentOrderTypeName("Oke");
+//		newShoType.setDescription("ShipmentOrderType Create By Cron Job 2 nha");
+//		newShoType.setDeleted(false);
+//		newShoType.setDeletedDate(null);
+//		newShoType.setDeletedUser(null);
+//		newShoType.setCreatedDate(LocalDateTime.now());
+//		System.out.println(newShoType.getCreatedDate());
+//		newShoType.setCreatedUser("Thang");
+//		newShoType.setUpdatedDate(null);
+//		newShoType.setUpdatedUser(null);
+//
+//		if (newShoType.getShipmentOrederTypeId() < 0) {
+//			LOGGER.warn("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
+//		}
+//		if (shipmentOrderTypeRepo.findById(newShoType.getShipmentOrederTypeId()).isPresent()) {
+//			LOGGER.warn("The shipmentOrderType with ID: " + newShoType.getShipmentOrederTypeId() + " is exist");
+//		}
+//		if (newShoType.isDeleted()) {
+//			LOGGER.warn("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
+//		} else {
+//
+//			shipmentOrderTypeRepo.save(newShoType);
+//			LOGGER.info(" 2 Insert new Shipment Order type " + newShoType.toString());
+//		}
+//	}
 
 
 }
