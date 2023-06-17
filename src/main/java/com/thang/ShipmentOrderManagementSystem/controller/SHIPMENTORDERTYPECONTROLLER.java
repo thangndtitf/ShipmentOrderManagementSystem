@@ -29,7 +29,13 @@ public class SHIPMENTORDERTYPECONTROLLER {
 	@GetMapping("searchAllShoType")
 	public List<SHIPMENTORDERTYPE> searchAllShoType(){
 		LOGGER.info("Get All ShipmentOrder type");
-		return shipmentOrderTypeService.getAllShipmentOrder();
+		return shipmentOrderTypeService.getAllShipmentOrderType();
+	}
+	
+	@GetMapping("searchAllShoTypeString")
+	public String searchAllShoTypeString(){
+		LOGGER.info("Get All ShipmentOrder type");
+		return shipmentOrderTypeService.getAllShoType();
 	}
 	
 	@PostMapping("getShoTypeById")
