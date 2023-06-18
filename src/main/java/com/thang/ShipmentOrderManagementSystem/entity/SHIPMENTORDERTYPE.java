@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
+import org.json.simple.JSONValue;
+
 
 @Entity
 @Table(name="MD_SHIPMENTORDERTYPE", schema = "MD")

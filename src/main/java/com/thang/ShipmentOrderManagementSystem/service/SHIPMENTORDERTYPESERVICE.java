@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -27,28 +29,9 @@ public class SHIPMENTORDERTYPESERVICE {
 		this._respObj = _respObj;
 	}
 
-	
-	// function to search all shipmentordertype
-	public List<SHIPMENTORDERTYPE> getAllShipmentOrderType() {
-
-		if (shipmentOrderTypeRepo.findAll().isEmpty()) {
-			throw new IllegalStateException("Cannot find any ShipmentOrderType");
-		}
-
-		List<SHIPMENTORDERTYPE> listResult = new ArrayList<SHIPMENTORDERTYPE>();
-
-		for (SHIPMENTORDERTYPE shoType : shipmentOrderTypeRepo.findAll()) {
-			if (shoType.isDeleted() == false) {
-				listResult.add(shoType);
-			}
-		}
-
-		return listResult;
-	}
-	
-	
-	public String getAllShoType() {
-		String resultObjString = "";
+	// Hàm get all shotype respone về lại đối tượng dữ liệu JSON
+	public JSONObject getAllShoType() {
+		JSONObject resultObjString ;
 		List<SHIPMENTORDERTYPE> shoTypeList = shipmentOrderTypeRepo.findAll();
 		if(shoTypeList.isEmpty()) {
 			_respObj.setError(true);
@@ -56,9 +39,10 @@ public class SHIPMENTORDERTYPESERVICE {
 			_respObj.setMessageDetail("loi ne thay kong");
 			_respObj.setResultObejct("");
 			resultObjString = _respObj.setResponeObj(_respObj);
+			LOGGER.warn(resultObjString);
 		}else {
 			for (SHIPMENTORDERTYPE shipmentordertype : shipmentOrderTypeRepo.findAll()) {
-				if(shipmentordertype.isDeleted() == false) {
+				if(shipmentordertype.isDeleted() == true) {
 					shoTypeList.remove(shipmentordertype);
 				}
 			}
@@ -67,85 +51,148 @@ public class SHIPMENTORDERTYPESERVICE {
 			_respObj.setMessageDetail("");
 			_respObj.setResultObejct(shoTypeList);
 			resultObjString = _respObj.setResponeObj(_respObj);	
+			LOGGER.info(resultObjString);
 		}
 		return resultObjString;
 	}
 	
-	
-
-	public Optional<SHIPMENTORDERTYPE> getShipmentOrderByID(int shoId) {
+	// Hàm get  shotype respone bằng ID được truyền vào bằng đối tượng dữ liệu JSON
+	public JSONObject getShipmentOrderByID(int shoId) {
 		Optional<SHIPMENTORDERTYPE> shoType = shipmentOrderTypeRepo.findById(shoId);
-
+		JSONObject resultObject;
 		if (shoId < 0) {
-			throw new IllegalStateException("The ID : " + shoId + " is <0.");
+			_respObj.setError(true);
+			_respObj.setMessage("Error at get Sho Type by ID");
+			_respObj.setMessageDetail("loi ne thay kong");
+			_respObj.setResultObejct("");
+			resultObject = _respObj.setResponeObj(_respObj);
+			return resultObject;
 		}
 		if (shoType.isEmpty()) {
-			throw new IllegalStateException("The ID : " + shoId + " is not exist.");
+			_respObj.setError(true);
+			_respObj.setMessage("The ID : " + shoId + " is not exist.");
+			_respObj.setMessageDetail("loi ne thay kong");
+			_respObj.setResultObejct("");
+			resultObject = _respObj.setResponeObj(_respObj);
+			return resultObject;
 		}
 		if (shoType.get().isDeleted() == true) {
-			throw new IllegalStateException("The shipmentOrder " + shoId + " was deleted");
+			_respObj.setError(true);
+			_respObj.setMessage("The shipmentOrder " + shoId + " was deleted");
+			_respObj.setMessageDetail("loi ne thay kong");
+			_respObj.setResultObejct("");
+			resultObject = _respObj.setResponeObj(_respObj);
+			return resultObject;
 		} else {
-			return shoType;
+			_respObj.setError(false);
+			_respObj.setMessage("OK");
+			_respObj.setMessageDetail("");
+			_respObj.setResultObejct(shoType);
+			resultObject = _respObj.setResponeObj(_respObj);
+			return resultObject;
 		}
 	}
 
-	public SHIPMENTORDERTYPE insertNewShoType(SHIPMENTORDERTYPE newShoType) {
+	//Hàm insert new 1 ShipmentOrderType
+	public JSONObject insertNewShoType(SHIPMENTORDERTYPE newShoType) {
+		JSONObject resultObj ;
 		newShoType.setDeleted(false);
 		newShoType.setDeletedDate(null);
 		newShoType.setDeletedUser(null);
 		newShoType.setCreatedDate(LocalDateTime.now());
 		System.out.println(newShoType.getCreatedDate());
 		newShoType.setCreatedUser("Thang");
-		;
 		newShoType.setUpdatedDate(null);
 		newShoType.setUpdatedUser(null);
 		if (newShoType.getShipmentOrederTypeId() < 0) {
-			throw new IllegalStateException("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
+			_respObj.setError(true);
+			_respObj.setMessage("The ID : " + newShoType.getShipmentOrederTypeId() + " is <0.");
+			_respObj.setMessageDetail("Loi ne thay kong");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		}
-		if (shipmentOrderTypeRepo.findById(newShoType.getShipmentOrederTypeId()).isPresent()) {
-			throw new IllegalStateException(
-					"The shipmentOrderType with ID: " + newShoType.getShipmentOrederTypeId() + " is exist");
+		if (shipmentOrderTypeRepo.findById(newShoType.getShipmentOrederTypeId()).isPresent()) {	
+			_respObj.setError(true);
+			_respObj.setMessage("The shipmentOrderType with ID: " + newShoType.getShipmentOrederTypeId() + " is exist");
+			_respObj.setMessageDetail("Loi ne thay kong");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		}
 		if (newShoType.isDeleted()) {
-			throw new IllegalStateException(
-					"The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
+			_respObj.setError(true);
+			_respObj.setMessage("The ShipmentOrderType with ID :" + newShoType.getShipmentOrederTypeId() + "was deleted!");
+			_respObj.setMessageDetail("Loi ne thay kong");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		} else {
-			return shipmentOrderTypeRepo.save(newShoType);
+			_respObj.setError(false);
+			_respObj.setMessage("OK");
+			_respObj.setMessageDetail("");
+			_respObj.setResultObejct(shipmentOrderTypeRepo.save(newShoType));
+			resultObj = _respObj.setResponeObj(_respObj);
+			 return resultObj;
 		}
 	}
 
-	public SHIPMENTORDERTYPE updateShoType(SHIPMENTORDERTYPE updateShoType, int shoTypeID) {
+	//Hàm update 1 ShipmentORderTpe 
+	public JSONObject updateShoType(SHIPMENTORDERTYPE updateShoType, int shoTypeID) {
 		Optional<SHIPMENTORDERTYPE> shoType = shipmentOrderTypeRepo.findById(shoTypeID);
+		JSONObject resultObj ;
 		if (shoType.isEmpty()) {
-			throw new IllegalStateException("The ID : " + shoType.get().getShipmentOrederTypeId() + " is not exist.");
+			_respObj.setError(true);
+			_respObj.setMessage("The ID : " + shoType.get().getShipmentOrederTypeId() + " is not exist.");
+			_respObj.setMessageDetail("Loi ne thay kong");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		}
 		shoType.get().setShipmentOrderTypeName(updateShoType.getShipmentOrderTypeName());
 		shoType.get().setUpdatedDate(LocalDateTime.now());
 		shoType.get().setUpdatedUser("Thang");
 		shoType.get().setDescription(updateShoType.getDescription());
-
-		return shipmentOrderTypeRepo.save(shoType.get());
+		_respObj.setError(false);
+		_respObj.setMessage("Ok");
+		_respObj.setMessageDetail("");
+		_respObj.setResultObejct(shipmentOrderTypeRepo.save(shoType.get()));
+		resultObj = _respObj.setResponeObj(_respObj);
+		return resultObj;
 	}
 
-	public boolean deleteShoType(int shoTypeId) {
-		boolean result = false;
+	//Hàm delete 1 ShipmentOrderType
+	public JSONObject deleteShoType(int shoTypeId) {
+		
+		JSONObject resultObj ;
 		Optional<SHIPMENTORDERTYPE> shoType = shipmentOrderTypeRepo.findById(shoTypeId);
 		if (shoType.isEmpty()) {
-			throw new IllegalStateException("The ID : " + shoType.get().getShipmentOrederTypeId() + " is not exist.");
+			_respObj.setError(true);
+			_respObj.setMessage("The ID : " + shoType.get().getShipmentOrederTypeId() + " is not exist.");
+			_respObj.setMessageDetail("Loi ne thay kong");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		}
-
 		try {
 			shoType.get().setDeleted(true);
 			shoType.get().setDeletedDate(LocalDateTime.now());
 			shoType.get().setDeletedUser("Thang");
 			shipmentOrderTypeRepo.save(shoType.get());
-			result = true;
+			_respObj.setError(false);
+			_respObj.setMessage("Ok");
+			_respObj.setMessageDetail("");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		} catch (Exception e) {
-			result = false;
-			throw new IllegalStateException("Delete ShipmentOrderType " + shoTypeId + " is not Success");
-
+			_respObj.setError(true);
+			_respObj.setMessage("Delete ShipmentOrderType " + shoTypeId + " is not Success");
+			_respObj.setMessageDetail("Loi ne thay kong");
+			_respObj.setResultObejct(" ");
+			resultObj = _respObj.setResponeObj(_respObj);
+			return resultObj;
 		}
-		return result;
 	}
 
 //	@Scheduled(fixedRate = 5000)
