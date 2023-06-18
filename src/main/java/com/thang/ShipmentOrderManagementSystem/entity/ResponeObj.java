@@ -1,10 +1,12 @@
 package com.thang.ShipmentOrderManagementSystem.entity;
 
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.Entity;
 
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.springframework.stereotype.Component;
 
@@ -22,16 +24,10 @@ public class ResponeObj {
 		this.messageDetail = messageDetail;
 		this.resultObejct = resultObejct;
 	}
-	
-	
-	
 
 	public ResponeObj() {
 		super();
 	}
-
-
-
 
 	public boolean isError() {
 		return isError;
@@ -65,19 +61,13 @@ public class ResponeObj {
 		this.resultObejct = resultObejct;
 	}
 
-	public String setResponeObj(ResponeObj _resp) {
-		String resultString = "";
+	public JSONObject setResponeObj(ResponeObj _resp) {
+		JSONObject resultString = new JSONObject();
 		Map resultMap = new HashMap();
-		try {
-			resultMap.put("isError", _resp.isError);
-			resultMap.put("message", _resp.getMessage());
-			resultMap.put("messageDetail", _resp.getMessageDetail());
-			resultMap.put("resultObj", _resp.getResultObejct());
-			resultString = JSONValue.toJSONString(resultMap);
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		resultString.put("isError", _resp.isError);
+		resultString.put("message", _resp.getMessage());
+		resultString.put("messageDetail", _resp.getMessageDetail());
+		resultString.put("resultObj", _resp.getResultObejct());
 		return resultString;
 	}
 
