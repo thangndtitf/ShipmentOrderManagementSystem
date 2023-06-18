@@ -27,6 +27,8 @@ public class SHIPMENTORDERTYPESERVICE {
 		super();
 		this.shipmentOrderTypeRepo = shipmentOrderTypeRepo;
 		this._respObj = _respObj;
+		
+		
 	}
 
 	// Hàm get all shotype respone về lại đối tượng dữ liệu JSON
