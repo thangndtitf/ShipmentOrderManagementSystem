@@ -1,7 +1,7 @@
 package com.thang.ShipmentOrderManagementSystem.controller;
 
-import java.util.List;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,30 +17,28 @@ import com.thang.ShipmentOrderManagementSystem.service.SHIPMENTORDERTYPESTEPSERV
 public class SHIPMENTORDERTPYESTEPCONTROLLER {
 	
 	private final SHIPMENTORDERTYPESTEPSERVICE shipmentOrderTypeStepRepo;
-	
-	
+
 	@Autowired
 	public SHIPMENTORDERTPYESTEPCONTROLLER(SHIPMENTORDERTYPESTEPSERVICE shipmentOrderTypeStepRepo) {
 		super();
 		this.shipmentOrderTypeStepRepo = shipmentOrderTypeStepRepo;
 	}
-
-
-
-	@GetMapping("searchAllStep")
-	public List<SHIPMENTORDERTPYESTEP> searchAllShoTypeStep(){
-		return shipmentOrderTypeStepRepo.getAllStep();
+	
+	
+	@GetMapping("/searchAllShoStep")
+	public JSONObject searchAllShoStep() {
+		return shipmentOrderTypeStepRepo.getAllShipmentOrderStep();
+	}
+	
+	@PostMapping("/searchStepByID")
+	public JSONObject searchStepByID(@RequestBody int stepID) {
+		return shipmentOrderTypeStepRepo.searchShoStepByID(stepID);
 	}
 	
 	@PostMapping("insertNewStep")
-	public SHIPMENTORDERTPYESTEP insertNewStep (@RequestBody SHIPMENTORDERTPYESTEP newStep) {
+	public JSONObject insertNewStep(@RequestBody SHIPMENTORDERTPYESTEP newStep) {
 		return shipmentOrderTypeStepRepo.insertNewStep(newStep);
 	}
 	
-	
-	@PostMapping("updateStep")
-	public SHIPMENTORDERTPYESTEP updateStep(SHIPMENTORDERTPYESTEP updateStep) {
-		return shipmentOrderTypeStepRepo.updateStep(updateStep);
-	}
 	
 }
